@@ -1,11 +1,8 @@
 name: SecureSDLC SAST
 
 on:
-  pull_request: {}
-  workflow_dispatch: {}
   workflow_call: {} # needed when being called from other workflow
-  push:
-    branches: ["master", "main"]
+
 jobs:
   SecureSDLC-SAST:
     name: SecureSDLC SAST
