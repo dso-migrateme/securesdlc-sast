@@ -6,7 +6,7 @@ on:
   push:
     branches: ["master", "main"]
 jobs:
-  testjob:
+  SecureSDLC-SAST:
     name: SecureSDLC SAST
     if: (github.actor != 'dependabot[bot]')
     continue-on-error: true
@@ -22,3 +22,19 @@ jobs:
       - name: SecureSDLC SAST
         run: |
           echo "SecureSDLC SAST"
+  SecureSDLC-SCA:
+    name: SecureSDLC SCA
+    if: (github.actor != 'dependabot[bot]')
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu
+    permissions:
+      contents: read # for actions/checkout to fetch code
+    env:
+      SEMGREP_APP_URL: "testurl"
+    steps:
+      - uses: actions/checkout@v4
+      - name: SecureSDLC SCA
+        run: |
+          echo "SecureSDLC SCA"
