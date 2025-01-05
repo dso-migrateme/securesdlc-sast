@@ -3,6 +3,7 @@ name: SecureSDLC SAST
 on:
   pull_request: {}
   workflow_dispatch: {}
+  workflow_call: {} # needed to allow being called from umbrella Include
   push:
     branches: ["master", "main"]
 jobs:
