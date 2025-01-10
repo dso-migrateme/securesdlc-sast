@@ -14,7 +14,7 @@ jobs:
     name: Semgrep SAST/SCA scan
     if: (github.actor != 'dependabot[bot]')
     continue-on-error: true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container:
       image: semgrep/semgrep
     permissions:
