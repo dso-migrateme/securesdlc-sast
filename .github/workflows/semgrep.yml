@@ -1,10 +1,14 @@
 name: Semgrep SAST and SCA scan
 
 on:
-  pull_request: {}
   workflow_dispatch: {}
+  pull_request: {}
+  # pull_request_target: {} # Gives workflows higher permissions. Not desired when working with public forks.
+  workflow_call: {}
   push:
-    branches: ["master", "main"]
+    branches:
+      - '**'
+
 jobs:
   semgrep:
     name: Semgrep SAST/SCA scan
