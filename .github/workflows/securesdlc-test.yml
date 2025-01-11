@@ -1,10 +1,11 @@
 name: SecureSDLC SAST
+run-name: "[Required SecureSDLC Workflow] Ref:${{ github.ref_name }}"
 
 on:
   workflow_dispatch: {}
+  workflow_call: {}
   pull_request: {}
   # pull_request_target: {} # Gives workflows higher permissions. Not desired when working with public forks.
-  workflow_call: {}
   push:
     branches:
       - '**'
