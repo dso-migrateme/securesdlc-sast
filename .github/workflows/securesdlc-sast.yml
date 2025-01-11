@@ -1,4 +1,5 @@
 name: Semgrep SAST and SCA scan
+run-name: "[ref:${{ github.ref }}] [user:${{ github.actor }}]"
 
 on:
   workflow_dispatch: {}
