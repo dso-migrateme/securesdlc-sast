@@ -17,7 +17,6 @@ jobs:
       github.event_name == 'push' &&
       github.ref_name == github.event.repository.default_branch &&
       github.actor != 'dependabot[bot]'
-    if: ${{ ((github.event_name == 'push') && (github.ref_name == github.event.repository.default_branch)) && (github.actor != 'dependabot[bot]') }}
     continue-on-error: true
     runs-on: ubuntu-24.04
     container:
