@@ -27,6 +27,7 @@ jobs:
       - name: SecureSDLC SAST
         run: |
           echo "SecureSDLC SAST"
+
   SecureSDLC-SCA:
     name: SecureSDLC SCA
     if: >
