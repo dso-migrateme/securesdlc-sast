@@ -1,19 +1,22 @@
-name: Semgrep SAST and SCA scan
-run-name: "[ref:${{ github.ref }}] [user:${{ github.actor }}]"
+name: SecureSDLC SAST
+run-name: "[Required SecureSDLC Workflow] Ref:${{ github.ref_name }}"
 
 on:
   workflow_dispatch: {}
   workflow_call: {}
   pull_request: {}
-  # pull_request_target: {} # Gives workflows higher permissions. Not desired when working with public forks.
+  # pull_request_target: {} # Gives workflows excessive permissions. Not wanted.
   push:
     branches:
-      - '**'
+      - '**' # Alternatively hardcode "main" instead of "if"s
 
 jobs:
   semgrep:
     name: Semgrep SAST/SCA scan
-    if: (github.actor != 'dependabot[bot]')
+    if: >
+      github.event_name == 'push' &&
+      github.ref_name == github.event.repository.default_branch &&
+      github.actor != 'dependabot[bot]'
     continue-on-error: true
     runs-on: ubuntu-24.04
     container:
