@@ -57,8 +57,8 @@ jobs:
           path: semgrep.sarif
           retention-days: 5
       # Fails gracefully for private repos when GitHub Advanced Security is not enabled.
-      # - name: Publish findings to the dashboard and annotate PRs
-      #   uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     sarif_file: semgrep.sarif
+      - name: Publish findings to the dashboard and annotate PRs
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
 
