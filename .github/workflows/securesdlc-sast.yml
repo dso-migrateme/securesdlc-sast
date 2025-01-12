@@ -57,7 +57,7 @@ jobs:
           path: semgrep.sarif
           retention-days: 5
       # Fails gracefully for private repos when GitHub Advanced Security is not enabled.
-      - name: Upload Semgrep SARIF output to GH Code Scanning (CodeQL)
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: semgrep.sarif
+      # - name: Upload Semgrep SARIF output to GH Code Scanning (CodeQL)
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   with:
+      #     sarif_file: semgrep.sarif
