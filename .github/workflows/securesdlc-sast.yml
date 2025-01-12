@@ -3,7 +3,7 @@ run-name: "[Required SecureSDLC Workflow] Ref:${{ github.ref_name }} Event:${{ g
 
 on:
   workflow_dispatch: {}
-  workflow_call: {}
+  workflow_call:
     secrets:
       PASSED:
         required: true
