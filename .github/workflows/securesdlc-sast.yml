@@ -13,12 +13,10 @@ on:
 jobs:
   semgrep:
     name: SecureSDLC SAST
+    # if: ${{ github.actor != 'dependabot[bot]' }}
     if: >
-      github.actor != 'dependabot[bot]'
-    # if: >
-    #   github.event_name == 'push' &&
-    #   github.ref_name == github.event.repository.default_branch &&
-    #   github.actor != 'dependabot[bot]'
+      ${{ (github.event_name == 'push' && github.ref_name == github.event.repository.default_branch) ||
+      (github.event_name == 'pull_request') }}
     continue-on-error: true
     runs-on: ubuntu-24.04
     container:
