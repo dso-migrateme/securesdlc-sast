@@ -50,14 +50,14 @@ jobs:
           EOF
       - name: Run Semgrep scan
         run: semgrep ci --metrics off --no-suppress-errors --sarif --output semgrep.sarif || true
-      - name: Upload Semgrep pipeline artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Semgrep scan results
-          path: semgrep.sarif
-          retention-days: 5
-      # Fails gracefully for private repos when GitHub Advanced Security is not enabled.
-      # - name: Upload Semgrep SARIF output to GH Code Scanning (CodeQL)
-      #   uses: github/codeql-action/upload-sarif@v3
+      # - name: Upload Semgrep pipeline artifact
+      #   uses: actions/upload-artifact@v4
       #   with:
-      #     sarif_file: semgrep.sarif
+      #     name: Semgrep scan results
+      #     path: semgrep.sarif
+      #     retention-days: 5
+      # Fails gracefully for private repos when GitHub Advanced Security is not enabled.
+      - name: Upload Semgrep SARIF output to GH Code Scanning (CodeQL)
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
