@@ -11,7 +11,7 @@ on:
       - '**' # Alternatively hardcode "main" instead of "if"s
 
 jobs:
-  SecureSDLC-SAST:
+  semgrep:
     name: SecureSDLC SAST
     if: >
       github.actor != 'dependabot[bot]'
@@ -22,36 +22,41 @@ jobs:
     continue-on-error: true
     runs-on: ubuntu-24.04
     container:
-      image: ubuntu
-    permissions:
-      contents: read # Allow fetch only.
-    env:
-      SEMGREP_APP_URL: "testurl"
-    steps:
-      - uses: actions/checkout@v4
-      - name: SecureSDLC SAST
-        run: |
-          echo "SecureSDLC SAST"
-  SecureSDLC-SCA:
-    name: SecureSDLC SCA
-    if: >
-      github.actor != 'dependabot[bot]'
-    # if: >
-    #   github.event_name == 'push' &&
-    #   github.ref_name == github.event.repository.default_branch &&
-    #   github.actor != 'dependabot[bot]'
-    continue-on-error: true
-    runs-on: ubuntu-24.04
-    container:
-      image: ubuntu
+      image: semgrep/semgrep
     permissions:
       contents: read # for actions/checkout to fetch code
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
     env:
-      SEMGREP_APP_URL: "testurl"
+      SEMGREP_APP_URL: ${{ secrets.SEMGREP_APP_URL }}
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
     steps:
       - uses: actions/checkout@v4
-      - name: SecureSDLC SCA
+      - name: Identify the last Committer
         run: |
-          echo "SecureSDLC SCA"
-
-
+          LAST_COMMITTER=${{ github.actor }}
+          # Shortening last committer. Some committers are bots with long names or not permitted chars
+          LAST_COMMITTER_SHORTENED=$(echo "${LAST_COMMITTER:0:26}")
+          echo "LAST_COMMITTER_SHORTENED=$LAST_COMMITTER_SHORTENED" >> "$GITHUB_ENV"
+      - name: Generate Semgrep Tags
+        run: |
+          echo "Overwriting .semgrepconfig.yml"
+          cat <<EOF > .semgrepconfig.yml
+          tags:
+            - GitHub Action
+            - Last Committer $LAST_COMMITTER_SHORTENED
+            - ${{ github.repository_owner }}
+          EOF
+      - name: Run Semgrep scan
+        run: semgrep ci --metrics off --no-suppress-errors --sarif --output semgrep.sarif || true
+      - name: Upload Semgrep pipeline artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Semgrep scan results
+          path: semgrep.sarif
+          retention-days: 5
+      # Fails gracefully for private repos when GitHub Advanced Security is not enabled.
+      - name: Upload Semgrep SARIF output to GH Code Scanning (CodeQL)
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
