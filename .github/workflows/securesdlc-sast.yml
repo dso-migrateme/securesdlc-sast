@@ -5,7 +5,9 @@ on:
   workflow_dispatch: {}
   workflow_call:
     secrets:
-      PASSED:
+      SEMGREP_APP_URL:
+        required: true
+      SEMGREP_APP_TOKEN:
         required: true
   pull_request: {} # Target protected branch is defined in Required workflow setting
   # pull_request_target: {} # Gives workflows excessive permissions. Not wanted.
@@ -39,7 +41,6 @@ jobs:
           echo "LAST_COMMITTER_SHORTENED=$LAST_COMMITTER_SHORTENED" >> "$GITHUB_ENV"
       - name: Generate Semgrep Tags
         run: |
-          echo "TEST_SECRET: ${{ secrets.PASSED }}"
           echo "Overwriting .semgrepconfig.yml"
           cat <<EOF > .semgrepconfig.yml
           tags:
